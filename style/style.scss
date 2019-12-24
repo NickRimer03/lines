@@ -43,7 +43,7 @@ body {
       background-color: $color;
 
       &.selected {
-        background-color: darken($color, 30%);
+        background-color: darken($color, 20%);
       }
     }
   }

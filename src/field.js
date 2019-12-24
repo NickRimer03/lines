@@ -1,36 +1,66 @@
 import { getRandomInt } from "./utils";
+import Draw from "./draw";
 
 const maxColors = 5;
 
 export default class Field {
   constructor([w, h]) {
     this.gameField = new Array(h).fill(0).map(() => new Array(w).fill(0));
-    this.selected = {
-      status: false,
-      target: null
-    };
-    this.gameField[0][9] = 1;
+    this.status = false;
+    this.target = { x: null, y: null };
+    this.drawer = new Draw(this);
+    this.coords = new Array(w * h).fill(0).map((e, i) => [i % w, Math.floor(i / w)]);
   }
 
-  /*next() {
-    this.gameField = this.gameField.map(col => col.map(e => (e === 0 ? getRandomInt(1, maxColors) : e)));
+  next(count) {
+    const targets = this.shuffle().slice(0, count);
+    targets.forEach(([x, y]) => {
+      const nouveau = getRandomInt(1, maxColors);
+      const old = this.gameField[y][x];
+      this.gameField[y][x] = nouveau;
+      this.drawer.update({ x, y, color: { old, nouveau } });
+    });
 
     return this;
-  }*/
+  }
 
-  tokenToggleSelect(token) {
-    token.classList.toggle("selected");
-    if (this.selected.status) {
-      if (this.selected.target === token) {
-        this.selected.status = false;
-        this.selected.target = null;
-      } else {
-        this.selected.target.classList.toggle("selected");
-        this.selected.target = token;
+  shuffle() {
+    return this.coords
+      .map(e => [e, Math.random()])
+      .sort(([, a], [, b]) => a - b)
+      .map(([e]) => e);
+  }
+
+  tokenClick({ x, y }) {
+    if (this.gameField[y][x] === 0) {
+      if (this.status) {
+        this.tokenMove();
       }
     } else {
-      this.selected.status = true;
-      this.selected.target = token;
+      this.tokenToggleSelect({ x, y });
+    }
+  }
+
+  tokenMove() {
+    //
+  }
+
+  tokenToggleSelect({ x, y }) {
+    this.drawer.toggle({ x, y });
+    if (this.status) {
+      if (this.target.x === x && this.target.y === y) {
+        this.status = false;
+        this.target.x = null;
+        this.target.y = null;
+      } else {
+        this.drawer.toggle({ x: this.target.x, y: this.target.y });
+        this.target.x = x;
+        this.target.y = y;
+      }
+    } else {
+      this.status = true;
+      this.target.x = x;
+      this.target.y = y;
     }
   }
 
