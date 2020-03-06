@@ -25,6 +25,12 @@ body {
   margin: 0 auto;
 }
 
+#predictor {
+  display: flex;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
 .token {
   box-sizing: border-box;
   width: 32px;
@@ -54,4 +60,8 @@ body {
   &._bottom {
     border-bottom: 1px solid #000;
   }
+}
+
+#toolbar {
+  margin-top: 10px;
 }

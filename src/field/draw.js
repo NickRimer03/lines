@@ -1,11 +1,9 @@
-const tokenParams = { width: 32, height: 32 };
-
 export default class Draw {
-  constructor(field) {
+  constructor({ field, dom, tokens: { w, h } }) {
     this.field = field;
-    this.dom = document.getElementById("field");
-    this.dom.style.width = `${tokenParams.width * field.width}px`;
-    this.dom.style.height = `${tokenParams.height * field.height}px`;
+    this.dom = document.getElementById(dom);
+    this.dom.style.width = `${w * field.width}px`;
+    this.dom.style.height = `${h * field.height}px`;
     this.tokens = new Array(field.height).fill(null).map(() => new Array(field.width).fill(null));
   }
 
@@ -38,11 +36,11 @@ export default class Draw {
     }
   }
 
-  update({ x, y, color: { old, nouveau } }) {
+  update({ x, y, color: { theOld, theNew } }) {
     const token = this.tokens[y][x];
-    token.classList.remove(`_${old}`);
-    token.classList.add(`_${nouveau}`);
-    token.textContent = nouveau;
+    token.classList.remove(`_${theOld}`);
+    token.classList.add(`_${theNew}`);
+    token.textContent = theNew;
   }
 
   toggle({ x, y }) {
