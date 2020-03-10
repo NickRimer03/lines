@@ -20,7 +20,7 @@ export default class Draw {
     token.textContent = color;
 
     token.onclick = () => {
-      this.field.tokenClick({ x: w, y: h });
+      this.field.tokenClick({ x: w, y: h, color });
     };
 
     return token;

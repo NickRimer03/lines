@@ -2,12 +2,15 @@ import Draw from "./draw";
 import Utils from "../utils";
 
 export default class Field {
-  constructor({ field: { dom, w, h }, tokens, maxColors, gamePredictor }) {
+  constructor({ field: { dom, w, h }, tokens, maxColors, minSequence, gamePredictor, gameScore, step }) {
     this.gameField = new Array(h).fill(0).map(() => new Array(w).fill(0));
     this.maxColors = maxColors;
+    this.minSequence = minSequence;
     this.gamePredictor = gamePredictor;
+    this.gameScore = gameScore;
+    this.step = step;
     this.status = false;
-    this.target = { x: null, y: null };
+    this.target = { x: null, y: null, color: null };
     this.coords = new Array(w * h).fill(0).map((e, i) => [i % w, Math.floor(i / w)]);
 
     this.drawer = new Draw({ field: this, dom, tokens });
@@ -17,9 +20,8 @@ export default class Field {
     const targets = Utils.shuffleArray(this.getEmptyTokens()).slice(0, count);
     targets.forEach(([x, y], i) => {
       const theNew = init ? Utils.getRandomInt(1, this.maxColors) : this.gamePredictor.prediction[i];
-      const theOld = this.gameField[y][x];
-      this.gameField[y][x] = theNew;
-      this.drawer.update({ x, y, color: { theOld, theNew } });
+      const theOld = this.getToken({ x, y });
+      this.setToken({ x, y, value: theNew, oldColor: theOld });
     });
     this.gamePredictor.next();
 
@@ -27,40 +29,115 @@ export default class Field {
   }
 
   getEmptyTokens() {
-    return this.coords.filter(([x, y]) => this.gameField[y][x] === 0);
+    return this.coords.filter(([x, y]) => this.getToken({ x, y }) === 0);
   }
 
   tokenClick({ x, y }) {
-    if (this.gameField[y][x] === 0) {
+    if (this.getToken({ x, y }) === 0) {
       if (this.status) {
         this.tokenMove({ x, y });
       }
     } else {
-      this.tokenToggleSelect({ x, y });
+      this.tokenToggleSelect({ x, y, color: this.getToken({ x, y }) });
     }
   }
 
   tokenMove({ x, y }) {
-    console.log(`move from ${this.target.x} ${this.target.y} to ${x} ${y}`);
+    this.setToken({ x, y, value: this.target.color, oldColor: 0 });
+    this.clearToken({ x: this.target.x, y: this.target.y, oldColor: this.target.color });
+    this.tokenToggleSelect({ x: this.target.x, y: this.target.y });
+
+    const h = this.checkHorizontal(y);
+    const v = this.checkVertical(x);
+
+    if (h.length === 0 && v.length === 0) {
+      this.next({ count: this.step });
+    } else {
+      this.clearSequences({ x, y, h, v });
+      this.gameScore.update({ h, v });
+    }
   }
 
-  tokenToggleSelect({ x, y }) {
+  tokenToggleSelect({ x, y, color }) {
     this.drawer.toggle({ x, y });
     if (this.status) {
       if (this.target.x === x && this.target.y === y) {
         this.status = false;
-        this.target.x = null;
-        this.target.y = null;
+        this.clearTarget();
       } else {
         this.drawer.toggle({ x: this.target.x, y: this.target.y });
-        this.target.x = x;
-        this.target.y = y;
+        this.setTarget({ x, y, color });
       }
     } else {
       this.status = true;
-      this.target.x = x;
-      this.target.y = y;
+      this.setTarget({ x, y, color });
     }
+  }
+
+  setTarget({ x, y, color }) {
+    this.target.x = x;
+    this.target.y = y;
+    this.target.color = color;
+
+    return this;
+  }
+
+  clearTarget() {
+    this.setTarget({ x: null, y: null, color: null });
+  }
+
+  getToken({ x, y }) {
+    return this.gameField[y][x];
+  }
+
+  setToken({ x, y, value, oldColor }) {
+    this.gameField[y][x] = value;
+    this.drawer.update({ x, y, color: { theOld: oldColor, theNew: value } });
+  }
+
+  clearToken({ x, y, oldColor }) {
+    this.gameField[y][x] = 0;
+    this.drawer.update({ x, y, color: { theOld: oldColor, theNew: 0 } });
+  }
+
+  checkHorizontal(row) {
+    return this.getSequences(this.gameField[row]);
+  }
+
+  checkVertical(col) {
+    return this.getSequences(this.gameField.map(row => row[col]));
+  }
+
+  getSequences(pool) {
+    const sequence = [];
+    const sequences = [];
+
+    pool.reduce((p, c, i) => {
+      if (p > 0 && c === p) {
+        if (!sequence.length) {
+          sequence.push(i - 1);
+        }
+        sequence.push(i);
+      } else if (sequence.length < this.minSequence) {
+        sequence.length = 0;
+      } else if (sequence.length >= this.minSequence) {
+        sequences.push([...sequence]);
+        sequence.length = 0;
+      }
+
+      return c;
+    }, 0);
+
+    if (sequence.length >= this.minSequence) {
+      sequences.push([...sequence]);
+    }
+
+    return sequences;
+  }
+
+  clearSequences({ x, y, h, v }) {
+    h.flat().forEach(e => this.clearToken({ x: e, y }));
+    v.flat().forEach(e => this.clearToken({ x, y: e }));
   }
 
   get width() {

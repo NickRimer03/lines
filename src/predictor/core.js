@@ -6,6 +6,7 @@ export default class Predictor {
     this.maxColors = maxColors;
     this.predict = predict;
     this.prediction = new Array(this.predict).fill(0);
+
     this.drawer = new Draw({ predictor: this, dom, tokens });
   }
 
