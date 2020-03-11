@@ -1,0 +1,86 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  background-color: lightgray;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#field {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+#predictor {
+  display: flex;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
+.token {
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  border-left: 1px solid #000;
+  border-top: 1px solid #000;
+  font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+  font-size: 10px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 8px;
+}
+.token._0 {
+  background-color: #fffff0;
+}
+.token._0.selected {
+  background-color: #ffff8a;
+}
+.token._1 {
+  background-color: #e18d96;
+}
+.token._1.selected {
+  background-color: #cc3c4c;
+}
+.token._2 {
+  background-color: #c1cd97;
+}
+.token._2.selected {
+  background-color: #98ac52;
+}
+.token._3 {
+  background-color: #c8b4ba;
+}
+.token._3.selected {
+  background-color: #9d7984;
+}
+.token._4 {
+  background-color: #909090;
+}
+.token._4.selected {
+  background-color: #5d5d5d;
+}
+.token._5 {
+  background-color: #f3ddb3;
+}
+.token._5.selected {
+  background-color: #e5b65b;
+}
+.token._right {
+  border-right: 1px solid #000;
+}
+.token._bottom {
+  border-bottom: 1px solid #000;
+}
+
+#score {
+  margin-top: 10px;
+}
