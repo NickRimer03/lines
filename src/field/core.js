@@ -50,7 +50,7 @@ export default class Field {
     const h = this.checkHorizontal(y);
     const v = this.checkVertical(x);
 
-    if (h.length === 0 && v.length === 0) {
+    if (h.size === 0 && v.size === 0) {
       this.next({ count: this.step });
     } else {
       this.clearSequences({ x, y, h, v });
@@ -110,34 +110,38 @@ export default class Field {
 
   getSequences(pool) {
     const sequence = [];
-    const sequences = [];
+    const sequences = new Map();
 
-    pool.reduce((p, c, i) => {
+    pool.reduce((p, c, i, a) => {
       if (p > 0 && c === p) {
         if (!sequence.length) {
           sequence.push(i - 1);
         }
         sequence.push(i);
+
+        if (i === a.length - 1 && sequence.length >= this.minSequence) {
+          sequences.set(p, [...sequence]);
+        }
       } else if (sequence.length < this.minSequence) {
         sequence.length = 0;
       } else if (sequence.length >= this.minSequence) {
-        sequences.push([...sequence]);
+        sequences.set(p, [...sequence]);
         sequence.length = 0;
       }
 
       return c;
     }, 0);
 
-    if (sequence.length >= this.minSequence) {
-      sequences.push([...sequence]);
-    }
-
     return sequences;
   }
 
   clearSequences({ x, y, h, v }) {
-    h.flat().forEach(e => this.clearToken({ x: e, y }));
-    v.flat().forEach(e => this.clearToken({ x, y: e }));
+    h.forEach((value, key) => {
+      value.forEach(e => this.clearToken({ x: e, y, oldColor: key }));
+    });
+    v.forEach((value, key) => {
+      value.forEach(e => this.clearToken({ x, y: e, oldColor: key }));
+    });
   }
 
   get width() {

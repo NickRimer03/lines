@@ -14,7 +14,7 @@ export default class Score {
   }
 
   calculate(set) {
-    return set.map(e => this.basic * Math.pow(2, e.length - this.minSequence));
+    return Array.from(set.values()).map(e => this.basic * Math.pow(2, e.length - this.minSequence));
   }
 
   addScore(values) {
