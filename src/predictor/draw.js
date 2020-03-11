@@ -9,10 +9,14 @@ export default class Draw {
 
   drawToken({ color, i }) {
     const token = document.createElement("div");
+    const bg = document.createElement("div");
     token.classList.add("token");
-    token.classList.add(`_${color}`);
     token.classList.add("_bottom");
-    token.textContent = color;
+
+    bg.classList.add("bg");
+    bg.classList.add("predicted");
+    bg.classList.add(`_${color}`);
+    token.appendChild(bg);
 
     if (i === this.predictor.predict - 1) {
       token.classList.add("_right");
@@ -30,9 +34,8 @@ export default class Draw {
   }
 
   update({ i, color: { theOld, theNew } }) {
-    const token = this.tokens[i];
-    token.classList.remove(`_${theOld}`);
-    token.classList.add(`_${theNew}`);
-    token.textContent = theNew;
+    const bg = this.tokens[i].getElementsByClassName("bg")[0];
+    bg.classList.remove(`_${theOld}`);
+    bg.classList.add(`_${theNew}`);
   }
 }

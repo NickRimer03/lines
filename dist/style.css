@@ -26,6 +26,7 @@ body {
 }
 
 .token {
+  position: relative;
   box-sizing: border-box;
   width: 32px;
   height: 32px;
@@ -38,49 +39,137 @@ body {
   font-weight: 400;
   line-height: 8px;
 }
-.token._0 {
-  background-color: #fffff0;
-}
-.token._0.selected {
-  background-color: #ffff8a;
-}
-.token._1 {
-  background-color: #e18d96;
-}
-.token._1.selected {
-  background-color: #cc3c4c;
-}
-.token._2 {
-  background-color: #c1cd97;
-}
-.token._2.selected {
-  background-color: #98ac52;
-}
-.token._3 {
-  background-color: #c8b4ba;
-}
-.token._3.selected {
-  background-color: #9d7984;
-}
-.token._4 {
-  background-color: #909090;
-}
-.token._4.selected {
-  background-color: #5d5d5d;
-}
-.token._5 {
-  background-color: #f3ddb3;
-}
-.token._5.selected {
-  background-color: #e5b65b;
-}
 .token._right {
   border-right: 1px solid #000;
 }
 .token._bottom {
   border-bottom: 1px solid #000;
 }
+.token .bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background-color: red;
+  transition: 0.15s;
+}
+.token .bg._0 {
+  background-color: #fffff0;
+}
+.token .bg._0.selected {
+  background-color: #ffff8a;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._0:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #ffffcc;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._1 {
+  background-color: #e18d96;
+}
+.token .bg._1.selected {
+  background-color: #cc3c4c;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._1:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #da717c;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._2 {
+  background-color: #c1cd97;
+}
+.token .bg._2.selected {
+  background-color: #98ac52;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._2:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #b3c17f;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._3 {
+  background-color: #c8b4ba;
+}
+.token .bg._3.selected {
+  background-color: #9d7984;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._3:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #b99fa7;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._4 {
+  background-color: #909090;
+}
+.token .bg._4.selected {
+  background-color: #5d5d5d;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._4:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #7e7e7e;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._5 {
+  background-color: #f3ddb3;
+}
+.token .bg._5.selected {
+  background-color: #e5b65b;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._5:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #eecf94;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._6 {
+  background-color: #bbc2d4;
+}
+.token .bg._6.selected {
+  background-color: #7d8aac;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._6:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #a5aec6;
+  transform: scale(1.15);
+  z-index: 1;
+}
+.token .bg._7 {
+  background-color: #e5a977;
+}
+.token .bg._7.selected {
+  background-color: #cf7327;
+  animation: bounce 2s ease-in infinite;
+  z-index: 1;
+}
+.token .bg._7:hover:not(.predicted):not(._0):not(.selected) {
+  background-color: #df9659;
+  transform: scale(1.15);
+  z-index: 1;
+}
 
 #score {
   margin-top: 10px;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

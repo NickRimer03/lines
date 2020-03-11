@@ -9,15 +9,18 @@ export default class Draw {
 
   drawToken({ color, w, h }) {
     const token = document.createElement("div");
+    const bg = document.createElement("div");
     token.classList.add("token");
-    token.classList.add(`_${color}`);
     if (w === this.field.width - 1) {
       token.classList.add("_right");
     }
     if (h === this.field.height - 1) {
       token.classList.add("_bottom");
     }
-    token.textContent = color;
+
+    bg.classList.add("bg");
+    bg.classList.add(`_${color}`);
+    token.appendChild(bg);
 
     token.onclick = () => {
       this.field.tokenClick({ x: w, y: h, color });
@@ -37,13 +40,12 @@ export default class Draw {
   }
 
   update({ x, y, color: { theOld, theNew } }) {
-    const token = this.tokens[y][x];
-    token.classList.remove(`_${theOld}`);
-    token.classList.add(`_${theNew}`);
-    token.textContent = theNew;
+    const bg = this.tokens[y][x].getElementsByClassName("bg")[0];
+    bg.classList.remove(`_${theOld}`);
+    bg.classList.add(`_${theNew}`);
   }
 
   toggle({ x, y }) {
-    this.tokens[y][x].classList.toggle("selected");
+    this.tokens[y][x].getElementsByClassName("bg")[0].classList.toggle("selected");
   }
 }
