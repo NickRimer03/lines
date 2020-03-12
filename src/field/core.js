@@ -1,5 +1,6 @@
 import Draw from "./draw";
 import Utils from "../utils";
+import Astar from "../astar";
 
 export default class Field {
   constructor({ field: { dom, w, h }, tokens, maxColors, minSequence, gamePredictor, gameScore, step }) {
@@ -14,6 +15,19 @@ export default class Field {
     this.coords = new Array(w * h).fill(0).map((e, i) => [i % w, Math.floor(i / w)]);
 
     this.drawer = new Draw({ field: this, dom, tokens });
+
+    debugger;
+    const params = {
+      field: this.gameField,
+      rules: {
+        wall: ">0",
+        empty: "===0"
+      },
+      points: { start: { x: 1, y: 1 }, end: { x: 6, y: 2 } },
+      cost: { easy: 10, hard: 14 },
+      orthogonal: false
+    };
+    this.aStar = new Astar(params);
   }
 
   next({ count, init = false }) {
@@ -33,6 +47,7 @@ export default class Field {
   }
 
   tokenClick({ x, y }) {
+    debugger;
     if (this.getToken({ x, y }) === 0) {
       if (this.status) {
         this.tokenMove({ x, y });
