@@ -5,6 +5,7 @@ export default class Draw {
     this.dom.style.width = `${w * field.width}px`;
     this.dom.style.height = `${h * field.height}px`;
     this.tokens = new Array(field.height).fill(null).map(() => new Array(field.width).fill(null));
+    this.highlighted = null;
   }
 
   drawToken({ color, w, h }) {
@@ -23,7 +24,11 @@ export default class Draw {
     token.appendChild(bg);
 
     token.onclick = () => {
-      this.field.tokenClick({ x: w, y: h, color });
+      this.field.tokenClick({ x: w, y: h });
+    };
+
+    token.onmouseenter = () => {
+      this.field.tokenMouseEnter({ x: w, y: h });
     };
 
     return token;
@@ -47,5 +52,19 @@ export default class Draw {
 
   toggle({ x, y }) {
     this.tokens[y][x].getElementsByClassName("bg")[0].classList.toggle("selected");
+  }
+
+  highlight({ x, y, mode }) {
+    this.clearHighlight();
+    this.tokens[y][x].getElementsByClassName("bg")[0].classList.toggle(mode);
+    this.highlighted = this.tokens[y][x].getElementsByClassName("bg")[0];
+  }
+
+  clearHighlight() {
+    if (this.highlighted) {
+      this.highlighted.classList.remove("good");
+      this.highlighted.classList.remove("bad");
+      this.highlighted = null;
+    }
   }
 }

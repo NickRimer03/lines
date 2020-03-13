@@ -63,8 +63,16 @@ body {
     width: 100%;
     height: 100%;
     top: 0;
-    background-color: red;
     transition: 0.15s;
+
+    &._0 {
+      &.good {
+        background-color: #e4e9d2;
+      }
+      &.bad {
+        background-color: #f3d2d5;
+      }
+    }
 
     @each $idx, $color in $colors {
       &._#{$idx} {

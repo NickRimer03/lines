@@ -33,6 +33,7 @@ export default class Field {
       this.setToken({ x, y, value: theNew, oldColor: theOld });
     });
     this.gamePredictor.next();
+    this.aStar.update(this.gameField);
 
     return this;
   }
@@ -45,10 +46,23 @@ export default class Field {
     if (this.getToken({ x, y }) === 0) {
       if (this.status && this.aStar.go({ start: { x: this.target.x, y: this.target.y }, end: { x, y } }).route.length) {
         this.tokenMove({ x, y });
-        this.aStar.update(this.gameField);
       }
     } else {
       this.tokenToggleSelect({ x, y, color: this.getToken({ x, y }) });
+    }
+  }
+
+  tokenMouseEnter({ x, y }) {
+    if (this.status) {
+      if (this.getToken({ x, y }) === 0) {
+        if (this.aStar.go({ start: { x: this.target.x, y: this.target.y }, end: { x, y } }).route.length) {
+          this.tokenHighlight({ x, y, mode: "good" });
+        } else {
+          this.tokenHighlight({ x, y, mode: "bad" });
+        }
+      } else {
+        this.tokenClearHighlight();
+      }
     }
   }
 
@@ -65,6 +79,7 @@ export default class Field {
     } else {
       this.clearSequences({ x, y, h, v });
       this.gameScore.update({ h, v });
+      this.aStar.update(this.gameField);
     }
   }
 
@@ -82,6 +97,14 @@ export default class Field {
       this.status = true;
       this.setTarget({ x, y, color });
     }
+  }
+
+  tokenHighlight(data) {
+    this.drawer.highlight(data);
+  }
+
+  tokenClearHighlight() {
+    this.drawer.clearHighlight();
   }
 
   setTarget({ x, y, color }) {
