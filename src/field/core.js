@@ -1,9 +1,9 @@
 import Draw from "./draw";
 import Utils from "../utils";
-import Astar from "../astar";
+import Astar from "astar";
 
 export default class Field {
-  constructor({ field: { dom, w, h }, tokens, maxColors, minSequence, gamePredictor, gameScore, step }) {
+  constructor({ field: { dom, w, h }, tokens, maxColors, minSequence, gamePredictor, gameScore, step, rules }) {
     this.gameField = new Array(h).fill(0).map(() => new Array(w).fill(0));
     this.maxColors = maxColors;
     this.minSequence = minSequence;
@@ -16,16 +16,11 @@ export default class Field {
 
     this.drawer = new Draw({ field: this, dom, tokens });
 
-    debugger;
     const params = {
       field: this.gameField,
-      rules: {
-        wall: ">0",
-        empty: "===0"
-      },
-      points: { start: { x: 1, y: 1 }, end: { x: 6, y: 2 } },
+      rules,
       cost: { easy: 10, hard: 14 },
-      orthogonal: false
+      orthogonal: true
     };
     this.aStar = new Astar(params);
   }
@@ -47,10 +42,10 @@ export default class Field {
   }
 
   tokenClick({ x, y }) {
-    debugger;
     if (this.getToken({ x, y }) === 0) {
-      if (this.status) {
+      if (this.status && this.aStar.go({ start: { x: this.target.x, y: this.target.y }, end: { x, y } }).route.length) {
         this.tokenMove({ x, y });
+        this.aStar.update(this.gameField);
       }
     } else {
       this.tokenToggleSelect({ x, y, color: this.getToken({ x, y }) });

@@ -4,8 +4,12 @@ const settings = {
   maxColors: 7,
   start: 10,
   predictor: { dom: "predictor", predict: 3 },
-  minSequence: 3,
-  score: { dom: "score", basic: 15 }
+  minSequence: 4,
+  score: { dom: "score", basic: 20 },
+  rules: {
+    wall: ">0",
+    empty: "===0"
+  }
 };
 
 export default settings;
